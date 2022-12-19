@@ -1,0 +1,51 @@
+﻿@model IEnumerable<AMSS.Models.Restaurant>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "New")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.RestaurantName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RestaurantLocation)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RestaurantPhoto)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RestaurantRating)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in ViewBag.Restaurants) {
+    <tr>
+        <td>
+            @item.RestaurantName
+        </td>
+        <td>
+            @item.RestaurantLocation
+        </td>
+        <td>
+            @item.RestaurantPhoto
+        </td>
+        <td>
+            @item.RestaurantRating
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.RestaurantId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.RestaurantId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.RestaurantId })
+        </td>
+    </tr>
+}
+
+</table>

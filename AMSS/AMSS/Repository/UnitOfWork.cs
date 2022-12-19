@@ -19,10 +19,15 @@ namespace AMSS.Repository
          */
         private bool disposed = false;
 
-        private readonly ApplicationDbContext dbContext = new ApplicationDbContext();
+        private readonly ApplicationDbContext dbContext;
         private GenericRepository<Restaurant> restaurantRepository;
         private GenericRepository<Review> reviewRepository;
         private GenericRepository<Food> foodRepository;
+
+        public UnitOfWork()
+        {
+            this.dbContext = new ApplicationDbContext();
+        }
 
         public GenericRepository<Restaurant> RestaurantRepository
         {

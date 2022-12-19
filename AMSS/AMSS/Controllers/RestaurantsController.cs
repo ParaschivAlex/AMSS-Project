@@ -1,7 +1,10 @@
 ﻿using AMSS.Models;
+using AMSS.Repository;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
@@ -10,6 +13,12 @@ namespace AMSS.Controllers
     public class RestaurantsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+        private IUnitOfWork unitOfWork;
+
+        public RestaurantsController()
+        {
+            this.unitOfWork = new UnitOfWork();
+        }
 
         // GET: Categories
         [Authorize(Roles = "Admin")]
@@ -20,13 +29,11 @@ namespace AMSS.Controllers
                 ViewBag.message = TempData["message"].ToString();
             }
 
-            var restaurants = from rest in db.Restaurants
-                             orderby rest.RestaurantName
-                             select rest;
+            IEnumerable<Restaurant> restaurants = unitOfWork.RestaurantRepository.Get(
+                orderBy: q => q.OrderBy(restaurant => restaurant.RestaurantName)
+            );
 
-            var restaurantsToUpdateRating = db.Restaurants.ToList();
-
-            foreach (var restaurant in restaurantsToUpdateRating)
+            foreach (Restaurant restaurant in restaurants)
             {
                 RatingChecker(restaurant.RestaurantId);
             }
@@ -78,40 +85,44 @@ namespace AMSS.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return View();
             }
         }
 
         [Authorize(Roles = "Admin")]
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int? id)
         {
-            Restaurant restaurant = db.Restaurants.Find(id);
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Restaurant restaurant = unitOfWork.RestaurantRepository.GetByID(id);
+            if (restaurant == null)
+            {
+                return HttpNotFound();
+            }
             return View(restaurant);
         }
 
         [HttpPut]
         [Authorize(Roles = "Admin")]
-        public ActionResult Edit(int id, Restaurant requestRestaurant)
+        public ActionResult Edit(Restaurant restaurant)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                Restaurant restaurant = db.Restaurants.Find(id);
-                if (TryUpdateModel(restaurant))
-                {
-                    restaurant = requestRestaurant;
-                    db.SaveChanges();
-                    return RedirectToAction("Index");
-                }
+                ViewBag.ConsultationCreateError = "Model state is not valid...";
+                return View(restaurant);
+            }
 
-                return View(requestRestaurant);
+            restaurant.Foods = unitOfWork.FoodRepository.Get(food => food.RestaurantId == restaurant.RestaurantId).ToArray();
+            restaurant.Reviews = unitOfWork.ReviewRepository.Get(review => review.RestaurantId == restaurant.RestaurantId).ToArray();
+
+            unitOfWork.RestaurantRepository.Update(restaurant);
+            unitOfWork.Save();
+            return RedirectToAction("Index");
             }
-            catch (Exception e)
-            {
-                return View(requestRestaurant);
-            }
-        }
 
         [Authorize(Roles = "Admin")]
         [HttpDelete]
