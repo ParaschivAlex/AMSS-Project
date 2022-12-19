@@ -41,9 +41,14 @@
             @item.RestaurantRating
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.RestaurantId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.RestaurantId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.RestaurantId })
+            <form method="post" action="/Restaurants/Delete/@item.RestaurantId">
+                @Html.HttpMethodOverride(HttpVerbs.Delete)
+                <button class="btn btn-danger justify-content-center" type="submit">Delete</button>
+            </form>
+        </td>
+        <td>
+            <a class="btn btn-warning" href="/Restaurants/Edit/@item.RestaurantId" style="display: inline-block; margin-right: 1em;">Edit</a>
+            @Html.ActionLink("Details", "Details", new { id = item.RestaurantId })
         </td>
     </tr>
 }
