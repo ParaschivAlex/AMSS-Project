@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
 
 namespace AMSS.Controllers
 {
@@ -21,7 +20,7 @@ namespace AMSS.Controllers
             var users = from user in db.Users
                         orderby user.UserName
                         select user;
-            ViewBag.UsersList = users;
+            ViewBag.UsersList = users.ToList();
 
             return View();
         }
