@@ -24,6 +24,9 @@ namespace AMSS.Repository
         private GenericRepository<Restaurant> restaurantRepository;
         private GenericRepository<Review> reviewRepository;
         private GenericRepository<Food> foodRepository;
+        private GenericRepository<ApplicationUser> userRepository;
+        private GenericRepository<IdentityRole> rolesRepository;
+        private GenericRepository<IdentityUserRole> userToRolesRepository;
 
         public UnitOfWork()
         {
@@ -64,6 +67,42 @@ namespace AMSS.Repository
                     this.foodRepository = new GenericRepository<Food>(dbContext);
                 }
                 return this.foodRepository;
+            }
+        }        
+        public GenericRepository<ApplicationUser> UserRepository
+        {
+            get
+            {
+
+                if (this.userRepository == null)
+                {
+                    this.userRepository = new GenericRepository<ApplicationUser>(dbContext);
+                }
+                return this.userRepository;
+            }
+        }                
+        public GenericRepository<IdentityRole> RolesRepository
+        {
+            get
+            {
+
+                if (this.rolesRepository == null)
+                {
+                    this.rolesRepository = new GenericRepository<IdentityRole>(dbContext);
+                }
+                return this.rolesRepository;
+            }
+        }                
+        public GenericRepository<IdentityUserRole> UserToRolesRepository
+        {
+            get
+            {
+
+                if (this.userToRolesRepository == null)
+                {
+                    this.userToRolesRepository = new GenericRepository<IdentityUserRole>(dbContext);
+                }
+                return this.userToRolesRepository;
             }
         }
 

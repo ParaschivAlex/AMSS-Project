@@ -9,20 +9,33 @@
         <h3><strong>Lista Useri</strong></h3>
         @foreach (var user in ViewBag.UsersList)
         {
-            <div class="panel-heading">Nume utilizator: @user.UserName</div>
+    <div class="panel-body">
 
-            <div class="panel-body">
+        <i class="glyphicon glyphicon-envelope"></i> Email utilizator: <span class="label label-default">@user.Email</span>
 
-                <i class="glyphicon glyphicon-envelope"></i> Email utilizator: <span class="label label-default">@user.Email</span>
 
-                <br /><br />
+        @if (@user.PhoneNumber != null)
+        {
+            <br />
+            <i class="glyphicon glyphicon-phone"></i>@:Telefon utilizator:<span class="label label-default">@user.PhoneNumber</span>
+        }
 
-                @if (@user.PhoneNumber != null)
+        <br />
+        @{
+            string userRoleId = user.Roles[0].RoleId;
+            string userRoleName = "";
+            foreach (var role in ViewBag.Roles)
+            {
+                if (role.Id == userRoleId)
                 {
-                    <i class="glyphicon glyphicon-phone"></i>@:Telefon utilizator:<span class="label label-default">@user.PhoneNumber</span>
+                    userRoleName = role.Name;
+                    break;
                 }
+            }
+            <i class="glyphicon glyphicon-phone"></i>@:Rol:<span class="label label-default"> @userRoleName</span>
+        }
 
-            </div>
+    </div>
 
             <div class="panel-footer">
                 <td>

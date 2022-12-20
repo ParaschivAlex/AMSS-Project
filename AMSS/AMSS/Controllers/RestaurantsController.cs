@@ -46,10 +46,8 @@ namespace AMSS.Controllers
         {
             try
             {
-                Restaurant restaurant = db.Restaurants.Find(id);
-                var foods = from food in db.Foods
-                                 where food.RestaurantId == restaurant.RestaurantId
-                                 select food;
+                Restaurant restaurant = unitOfWork.RestaurantRepository.GetByID(id);
+                IEnumerable<Food> foods = unitOfWork.FoodRepository.Get(food=>food.RestaurantId==restaurant.RestaurantId);
                 ViewBag.Reviews = restaurant.Reviews;
                 if (foods != null)
                 {
@@ -81,8 +79,8 @@ namespace AMSS.Controllers
         {
             try
             {
-                db.Restaurants.Add(res);
-                db.SaveChanges();
+                unitOfWork.RestaurantRepository.Insert(res);
+                unitOfWork.Save();
                 return RedirectToAction("Index");
             }
             catch (Exception)

@@ -14,6 +14,10 @@ namespace AMSS.Repository
         GenericRepository<Restaurant> RestaurantRepository { get; }
         GenericRepository<Review> ReviewRepository { get; }
         GenericRepository<Food> FoodRepository { get; }
+        GenericRepository<ApplicationUser> UserRepository { get; }
+        GenericRepository<IdentityRole> RolesRepository { get; }
+        GenericRepository<IdentityUserRole> UserToRolesRepository { get; }
+
         void Save();
         void Dispose();
     }
