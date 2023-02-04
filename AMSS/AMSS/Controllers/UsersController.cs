@@ -6,46 +6,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
+using AMSS.Repository;
 
 namespace AMSS.Controllers
 {
     [Authorize(Roles = "Admin")]
     public class UsersController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private IUnitOfWork unitOfWork;
+
+        public UsersController()
+        {
+            this.unitOfWork = new UnitOfWork();
+        }
 
         // GET: Users
         public ActionResult Index()
         {
-            var users = from user in db.Users
-                        orderby user.UserName
-                        select user;
+            List<ApplicationUser> users = unitOfWork.UserRepository.Get(
+                orderBy: q => q.OrderBy(user => user.UserName)
+            ).ToList();
+            IEnumerable<IdentityRole> roles = unitOfWork.RolesRepository.Get().ToList();
             ViewBag.UsersList = users;
-
+            ViewBag.Roles = roles;
             return View();
-        }
-
-        public ActionResult Show(string id)
-        {
-
-            ApplicationUser user = db.Users.Find(id);
-            ViewBag.utilizatorCurent = User.Identity.GetUserId();
-
-            string currentRole = user.Roles.FirstOrDefault().RoleId;
-
-            var userRoleName = (from role in db.Roles
-                                where role.Id == currentRole
-                                select role.Name).First();
-
-            ViewBag.roleName = userRoleName;
-
-            return View(user);
         }
 
         public ActionResult Edit(string id)
         {
-            ApplicationUser user = db.Users.Find(id);
+            ApplicationUser user = unitOfWork.UserRepository.GetByID(id);
             user.AllRoles = GetAllRoles();
             var userRole = user.Roles.FirstOrDefault();
             ViewBag.userRole = userRole.RoleId;
@@ -55,34 +44,30 @@ namespace AMSS.Controllers
         [HttpPut]
         public ActionResult Edit(string id, ApplicationUser newData)
         {
-            ApplicationUser user = db.Users.Find(id);
+            ApplicationUser user = unitOfWork.UserRepository.GetByID(id);
             user.AllRoles = GetAllRoles();
-            var userRole = user.Roles.FirstOrDefault();
+            IdentityUserRole userRole = user.Roles.FirstOrDefault();
             ViewBag.userRole = userRole.RoleId;
 
             try
             {
-                ApplicationDbContext context = new ApplicationDbContext();
-                var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
-                var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-
-
                 if (TryUpdateModel(user))
                 {
                     user.UserName = newData.UserName;
                     user.Email = newData.Email;
                     user.PhoneNumber = newData.PhoneNumber;
+                    newData.AllRoles = user.AllRoles;
 
-                    var roles = from role in db.Roles select role;
-                    foreach (var role in roles)
-                    {
-                        UserManager.RemoveFromRole(id, role.Name);
-                    }
+                    IdentityUserRole userToRolesToDelete = unitOfWork.UserToRolesRepository.Get(
+                        userToRole => userToRole.UserId == user.Id
+                    ).First();
+                    unitOfWork.UserToRolesRepository.Delete(userToRolesToDelete);
 
-                    var selectedRole = db.Roles.Find(HttpContext.Request.Params.Get("newRole"));
-                    UserManager.AddToRole(id, selectedRole.Name);
-
-                    db.SaveChanges();
+                    IdentityUserRole newUserToRole = new IdentityUserRole();
+                    newUserToRole.RoleId = HttpContext.Request.Params.Get("newRole");
+                    newUserToRole.UserId = user.Id;
+                    unitOfWork.UserToRolesRepository.Insert(newUserToRole);
+                    unitOfWork.Save();
                 }
                 return RedirectToAction("Index");
             }
@@ -94,12 +79,28 @@ namespace AMSS.Controllers
             }
         }
 
+        [HttpDelete]
+        public ActionResult Delete(string id)
+        {
+            ApplicationUser userToDelete = unitOfWork.UserRepository.GetByID(id);
+            unitOfWork.UserRepository.Delete(userToDelete);
+            IEnumerable<IdentityUserRole> userRolesEntryToClean = unitOfWork.UserToRolesRepository.Get(
+                userToRole => userToRole.UserId == id
+            );
+            foreach (IdentityUserRole entryToDelete in userRolesEntryToClean)
+            {
+                unitOfWork.UserToRolesRepository.Delete(entryToDelete);
+            }
+            unitOfWork.Save();
+            return RedirectToAction("Index");
+        }
+
         [NonAction]
         public IEnumerable<SelectListItem> GetAllRoles()
         {
             var selectList = new List<SelectListItem>();
 
-            var roles = from role in db.Roles select role;
+            var roles = unitOfWork.RolesRepository.Get();
             foreach (var role in roles)
             {
                 selectList.Add(new SelectListItem
@@ -109,20 +110,6 @@ namespace AMSS.Controllers
                 });
             }
             return selectList;
-        }
-
-        [HttpDelete]
-        public ActionResult Delete(string id)
-        {
-            ApplicationDbContext context = new ApplicationDbContext();
-
-            var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-
-            var user = UserManager.Users.FirstOrDefault(u => u.Id == id);
-
-            db.SaveChanges();
-            UserManager.Delete(user);
-            return RedirectToAction("Index");
         }
     }
 }

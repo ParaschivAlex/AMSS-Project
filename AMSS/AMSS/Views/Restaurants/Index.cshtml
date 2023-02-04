@@ -1,0 +1,55 @@
+﻿@model IEnumerable<AMSS.Models.Restaurant>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "New")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.RestaurantName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RestaurantLocation)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RestaurantPhoto)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RestaurantRating)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in ViewBag.Restaurants) {
+    <tr>
+        <td>
+            @item.RestaurantName
+        </td>
+        <td>
+            @item.RestaurantLocation
+        </td>
+        <td>
+            @item.RestaurantPhoto
+        </td>
+        <td>
+            @item.RestaurantRating
+        </td>
+        <td>
+            <form method="post" action="/Restaurants/Delete/@item.RestaurantId">
+                @Html.HttpMethodOverride(HttpVerbs.Delete)
+                <button class="btn btn-danger justify-content-center" type="submit">Delete</button>
+            </form>
+        </td>
+        <td>
+            <a class="btn btn-warning" href="/Restaurants/Edit/@item.RestaurantId" style="display: inline-block; margin-right: 1em;">Edit</a>
+        </td>
+    </tr>
+}
+
+</table>
