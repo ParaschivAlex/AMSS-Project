@@ -12,10 +12,8 @@ namespace AMSS.Models
         public int OrderListId { get; set; }
 
         public string UserId { get; set; }
-        public int RestaurantId { get; set; }
 
         public virtual ApplicationUser User { get; set; }
-        public virtual Restaurant Restaurant { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }

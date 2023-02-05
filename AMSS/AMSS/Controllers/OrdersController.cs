@@ -57,8 +57,7 @@ namespace AMSS.Controllers
             Order order = new Order();
             var currentUserId = User.Identity.GetUserId();
             var currentOrderList = db.OrderLists.Where(user => user.UserId == currentUserId).First();
-            order.OrderDetails = db.OrderDetails.Where(orderDetail => orderDetail.OrderListId == currentOrderList.id).ToList();
-            order.RestaurantId = currentOrderList.RestaurantId;
+            order.OrderDetails = db.OrderDetails.Where(orderDetail => orderDetail.OrderListId == currentOrderList.OrderListId).ToList();
 
             float payment = 0;
 
@@ -86,7 +85,7 @@ namespace AMSS.Controllers
                 {
                     if (order.OrderDetails.Count > 0)
                     {
-                        db.Orders.add(order);
+                        db.Orders.Add(order);
                         db.SaveChanges();
                         TempData["message"] = "Comanda a fost plasata!";
                         return RedirectToAction("Index");

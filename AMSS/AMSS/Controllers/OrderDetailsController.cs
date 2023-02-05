@@ -25,7 +25,6 @@ namespace AMSS.Controllers
                 // Current user is starting to order from a new restaurant;
                 orderList = new OrderList
                 {
-                    RestaurantId = food.RestaurantId,
                     UserId = currentUserId
                 };
                 db.SaveChanges();
@@ -39,7 +38,6 @@ namespace AMSS.Controllers
                     // Current user is shopping at another restaurant
                     orderList = new OrderList
                     {
-                        RestaurantId = food.RestaurantId,
                         UserId = currentUserId
                     };
                     db.SaveChanges();
