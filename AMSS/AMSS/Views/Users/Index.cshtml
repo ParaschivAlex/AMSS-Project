@@ -1,0 +1,53 @@
+﻿@model IEnumerable<AMSS.Models.ApplicationUser>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="row">
+    <div class=" col-md-6">
+        <h3><strong>Lista Useri</strong></h3>
+        @foreach (var user in ViewBag.UsersList)
+        {
+    <div class="panel-body">
+
+        <i class="glyphicon glyphicon-envelope"></i> Email utilizator: <span class="label label-default">@user.Email</span>
+
+
+        @if (@user.PhoneNumber != null)
+        {
+            <br />
+            <i class="glyphicon glyphicon-phone"></i>@:Telefon utilizator:<span class="label label-default">@user.PhoneNumber</span>
+        }
+
+        <br />
+        @{
+            string userRoleId = user.Roles[0].RoleId;
+            string userRoleName = "";
+            foreach (var role in ViewBag.Roles)
+            {
+                if (role.Id == userRoleId)
+                {
+                    userRoleName = role.Name;
+                    break;
+                }
+            }
+            <i class="glyphicon glyphicon-phone"></i>@:Rol:<span class="label label-default"> @userRoleName</span>
+        }
+
+    </div>
+
+            <div class="panel-footer">
+                <td>
+                    <a class="btn btn-warning" href="/Users/Edit/@user.Id" style="display: inline-block; margin-right: 1em;">Edit</a>
+                </td>
+                <form method="post" action="/Users/Delete/@user.Id">
+                    @Html.HttpMethodOverride(HttpVerbs.Delete)
+                    <button class="btn btn-danger justify-content-center" type="submit">Delete</button>
+                </form>
+            </div>
+
+            <br /><br />
+        }
+    </div>
+</div>

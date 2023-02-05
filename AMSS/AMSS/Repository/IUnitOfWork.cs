@@ -1,9 +1,5 @@
 ﻿using AMSS.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace AMSS.Repository
 {
@@ -18,6 +14,10 @@ namespace AMSS.Repository
         GenericRepository<Restaurant> RestaurantRepository { get; }
         GenericRepository<Review> ReviewRepository { get; }
         GenericRepository<Food> FoodRepository { get; }
+        GenericRepository<ApplicationUser> UserRepository { get; }
+        GenericRepository<IdentityRole> RolesRepository { get; }
+        GenericRepository<IdentityUserRole> UserToRolesRepository { get; }
+
         void Save();
         void Dispose();
     }
