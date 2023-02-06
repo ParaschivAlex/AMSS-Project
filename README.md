@@ -14,8 +14,6 @@ Diagrama overview initiala, inainte de checkpoint:
 
 <h3>Hirhui Calin</h3>
 
-Contributie personala:
-
 State Diagram:
 ![calin](https://github.com/ParaschivAlex/AMSS-Project/blob/main/amss_state_hirhui.png)
 <hr>
@@ -25,8 +23,6 @@ To be updated diagram:
 
 <h3>Paraschiv Alexandru-Andrei</h3>
 
-Contributie personala: Am creat proiectul si am dezvoltat partile pentru Food, Restaurant, Review si User in mod traditional, fara design pattern "Repository".
-
 Use Case Diagram:
 ![alex](https://github.com/ParaschivAlex/AMSS-Project/blob/main/amss_ucd_paraschiv.png)
 <hr>
@@ -35,8 +31,6 @@ Class Diagram:
 <hr>
 
 <h3>Gherasim Rares</h3>
-
-Contributie personala:
 
 To be updated diagram:
 ![rares](LINK TO BE UPDATED)
