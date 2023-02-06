@@ -25,9 +25,9 @@ Contributie personala:
 
 Contributie personala: Am creat proiectul si am dezvoltat partile pentru Food, Restaurant, Review si User in mod traditional, fara design pattern "Repository".
 
-![alex](/blob/main/amss_ucd_paraschiv.png)
+![alex](https://github.com/ParaschivAlex/AMSS-Project/blob/main/amss_ucd_paraschiv.png)
 <hr>
-![alex](https://github.com/ParaschivAlex/AMSS-Project/blob/main/amss_cls_paraschiv.png)
+![alex] (https://github.com/ParaschivAlex/AMSS-Project/blob/main/amss_cls_paraschiv.png)
 <hr>
 
 <h3>Gherasim Rares</h3>
