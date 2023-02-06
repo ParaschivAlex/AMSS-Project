@@ -1,4 +1,5 @@
 ﻿using AMSS.Models;
+using AMSS.Repository;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
@@ -10,14 +11,19 @@ namespace AMSS.Controllers
 {
     public class OrderDetailsController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private IUnitOfWork unitOfWork;
+
+        public OrderDetailsController()
+        {
+            unitOfWork = new UnitOfWork();
+        }
 
         [Authorize(Roles = "User")]
         public OrderList GetOrderList()
         {
             var currentUserId = User.Identity.GetUserId();
 
-            OrderList orderList = db.OrderLists.Where(user => user.UserId == currentUserId).FirstOrDefault();
+            OrderList orderList = unitOfWork.OrdersListsRepository.Get(user => user.UserId == currentUserId).FirstOrDefault();
 
             //SINGLETON
 
@@ -29,8 +35,8 @@ namespace AMSS.Controllers
                     UserId = currentUserId
                 };
 
-                db.OrderLists.Add(orderList);
-                db.SaveChanges();
+                unitOfWork.OrdersListsRepository.Insert(orderList);
+                unitOfWork.Save();
             }
 
             return orderList;
@@ -42,7 +48,7 @@ namespace AMSS.Controllers
         {
             var currentUserId = User.Identity.GetUserId();
 
-            Food food = db.Foods.Where(a => a.FoodId == foodId).FirstOrDefault();
+            Food food = unitOfWork.FoodRepository.Get(a => a.FoodId == foodId).FirstOrDefault();
 
             OrderList orderList = GetOrderList();
 
@@ -50,7 +56,7 @@ namespace AMSS.Controllers
             {
                 OrderDetail selectedOrder = orderList.OrderDetails.Where(a => a.FoodId == food.FoodId).First();
                 selectedOrder.Quantity++;
-                db.SaveChanges();
+                unitOfWork.Save();
             }
             else
             {
@@ -62,8 +68,8 @@ namespace AMSS.Controllers
                     Quantity = 1
                 };
 
-                db.OrderDetails.Add(newOrderDetail);
-                db.SaveChanges();
+                unitOfWork.OrdersDetailsRepository.Insert(newOrderDetail);
+                unitOfWork.Save();
             }
 
             TempData["message"] = "Product was added to your cart!";
@@ -75,8 +81,8 @@ namespace AMSS.Controllers
         {
             var currentUserId = User.Identity.GetUserId();
 
-            OrderDetail orderDetail = db.OrderDetails.Find(id);
-            OrderList orderList = db.OrderLists.Find(orderDetail.OrderListId);
+            OrderDetail orderDetail = unitOfWork.OrdersDetailsRepository.GetByID(id);
+            OrderList orderList = unitOfWork.OrdersListsRepository.GetByID(orderDetail.OrderListId);
 
             if (orderList.UserId == currentUserId)
             {
@@ -86,9 +92,9 @@ namespace AMSS.Controllers
                 }
                 else
                 {
-                    db.OrderDetails.Remove(orderDetail);
+                    unitOfWork.OrdersDetailsRepository.Delete(orderDetail);
                 }
-                db.SaveChanges();
+                unitOfWork.Save();
             }
 
             return Redirect("/OrderLists/Index");

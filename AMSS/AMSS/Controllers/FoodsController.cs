@@ -1,4 +1,5 @@
 ﻿using AMSS.Models;
+using AMSS.Repository;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,12 @@ namespace AMSS.Controllers
 {
     public class FoodsController : Controller
     {
-        public ApplicationDbContext db = new ApplicationDbContext();
+        private IUnitOfWork unitOfWork;
 
-        private List<Food> foodsList;
+        public FoodsController()
+        {
+            this.unitOfWork = new UnitOfWork();
+        }
 
         public ActionResult Index(string sortOrder, string search, string currentFilter)
         {
@@ -26,8 +30,7 @@ namespace AMSS.Controllers
 
             ViewBag.CurrentFilter = search;
 
-            var foods = from f in db.Foods
-                             select f;
+            var foods = unitOfWork.FoodRepository.Get();
            
             if (!String.IsNullOrEmpty(search))
             {
@@ -73,7 +76,7 @@ namespace AMSS.Controllers
 
         public ActionResult Show(int id)
         {
-            Food food = db.Foods.Find(id);
+            Food food = unitOfWork.FoodRepository.GetByID(id);
             ViewBag.Food = food;
             ViewBag.Restaurant = food.Restaurant;            
             ViewBag.currentUser = User.Identity.GetUserId();
@@ -98,11 +101,11 @@ namespace AMSS.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    db.Foods.Add(food);
-                    db.SaveChanges();
+                    unitOfWork.FoodRepository.Insert(food);
+                    unitOfWork.Save();
                     //Console.WriteLine("DB.SAVEDCHANGES");
                     TempData["message"] = "The food has been added! Add another food?";
-                    return RedirectToAction("Index");
+                    return Redirect("/Home/Index");
                 }
                 else
                 {
@@ -122,7 +125,7 @@ namespace AMSS.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult Edit(int id)
         {
-            Food food = db.Foods.Find(id);
+            Food food = unitOfWork.FoodRepository.GetByID(id);
             food.RestaurantList = GetRestaurants();
             ViewBag.Freshener = food;
             ViewBag.Restaurant = food.Restaurant;
@@ -139,13 +142,13 @@ namespace AMSS.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    Food food = db.Foods.Find(id);
+                    Food food = unitOfWork.FoodRepository.GetByID(id);
 
                     if (TryUpdateModel(food))
                     {
                         food = requestFood;
                         food.FoodModifyDate = DateTime.Now;
-                        db.SaveChanges();
+                        unitOfWork.Save();
                         TempData["message"] = "The food has been modified!";
                     }
                 }
@@ -163,9 +166,9 @@ namespace AMSS.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult Delete(int id)
         {
-            Food food = db.Foods.Find(id);
-            db.Foods.Remove(food);
-            db.SaveChanges();
+            Food food = unitOfWork.FoodRepository.GetByID(id);
+            unitOfWork.FoodRepository.Delete(food);
+            unitOfWork.Save();
             return RedirectToAction("Index");
         }
 
@@ -173,7 +176,7 @@ namespace AMSS.Controllers
         public IEnumerable<SelectListItem> GetRestaurants()
         {
             var selectList = new List<SelectListItem>();
-            var restaurants = from res in db.Restaurants select res;
+            var restaurants = unitOfWork.RestaurantRepository.Get();
 
             foreach (var restaurant in restaurants)
             {

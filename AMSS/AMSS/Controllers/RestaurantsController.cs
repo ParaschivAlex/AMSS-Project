@@ -12,7 +12,6 @@ namespace AMSS.Controllers
 {
     public class RestaurantsController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
         private IUnitOfWork unitOfWork;
 
         public RestaurantsController()

@@ -27,6 +27,7 @@
                     @if (User.IsInRole("Admin"))
                     {
                         <li>@Html.ActionLink("All Users", "Index", "Users")</li>
+                        <li>@Html.ActionLink("Food", "New", "Foods")</li>
                     }
                     @if (User.IsInRole("Admin") || User.IsInRole("User") || User.IsInRole("Restaurant Manager"))
                     {

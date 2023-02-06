@@ -23,6 +23,9 @@ namespace AMSS.Repository
         private readonly ApplicationDbContext dbContext;
         private GenericRepository<Restaurant> restaurantRepository;
         private GenericRepository<Review> reviewRepository;
+        private GenericRepository<Order> ordersRepository;
+        private GenericRepository<OrderList> ordersListsRepository;
+        private GenericRepository<OrderDetail> ordersDetailsRepository;
         private GenericRepository<Food> foodRepository;
         private GenericRepository<ApplicationUser> userRepository;
         private GenericRepository<IdentityRole> rolesRepository;
@@ -103,6 +106,42 @@ namespace AMSS.Repository
                     this.userToRolesRepository = new GenericRepository<IdentityUserRole>(dbContext);
                 }
                 return this.userToRolesRepository;
+            }
+        }
+        public GenericRepository<Order> OrdersRepository
+        {
+            get
+            {
+
+                if (this.ordersRepository == null)
+                {
+                    this.ordersRepository = new GenericRepository<Order>(dbContext);
+                }
+                return this.ordersRepository;
+            }
+        }
+        public GenericRepository<OrderList> OrdersListsRepository
+        {
+            get
+            {
+
+                if (this.ordersListsRepository == null)
+                {
+                    this.ordersListsRepository = new GenericRepository<OrderList>(dbContext);
+                }
+                return this.ordersListsRepository;
+            }
+        }
+        public GenericRepository<OrderDetail> OrdersDetailsRepository
+        {
+            get
+            {
+
+                if (this.ordersDetailsRepository == null)
+                {
+                    this.ordersDetailsRepository = new GenericRepository<OrderDetail>(dbContext);
+                }
+                return this.ordersDetailsRepository;
             }
         }
 

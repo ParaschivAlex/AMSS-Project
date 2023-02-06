@@ -12,6 +12,9 @@ namespace AMSS.Repository
         - Follow the next steps in UnitOfWork.cs
          */
         GenericRepository<Restaurant> RestaurantRepository { get; }
+        GenericRepository<Order> OrdersRepository { get; }
+        GenericRepository<OrderList> OrdersListsRepository { get; }
+        GenericRepository<OrderDetail> OrdersDetailsRepository { get; }
         GenericRepository<Review> ReviewRepository { get; }
         GenericRepository<Food> FoodRepository { get; }
         GenericRepository<ApplicationUser> UserRepository { get; }

@@ -1,4 +1,5 @@
 ﻿using AMSS.Models;
+using AMSS.Repository;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,12 @@ namespace AMSS.Controllers
 {
     public class OrderListsController : Controller
     {
+        private IUnitOfWork unitOfWork;
+
+        public OrderListsController()
+        {
+            unitOfWork = new UnitOfWork();
+        }
         private ApplicationDbContext db = new ApplicationDbContext();
 
         [Authorize(Roles = "User")]
@@ -18,7 +25,7 @@ namespace AMSS.Controllers
         {
             var currentUserId = User.Identity.GetUserId();
 
-            OrderList orderList = db.OrderLists.Where(user => user.UserId == currentUserId).FirstOrDefault();
+            OrderList orderList = unitOfWork.OrdersListsRepository.Get(user => user.UserId == currentUserId).FirstOrDefault();
 
             if (orderList == null)
             {
@@ -28,8 +35,8 @@ namespace AMSS.Controllers
                     UserId = currentUserId
                 };
 
-                db.OrderLists.Add(orderList);
-                db.SaveChanges();
+                unitOfWork.OrdersListsRepository.Insert(orderList);
+                unitOfWork.Save();
             }
 
             return orderList;

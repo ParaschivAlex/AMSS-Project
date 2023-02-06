@@ -1,4 +1,5 @@
 ﻿using AMSS.Models;
+using AMSS.Repository;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
@@ -12,7 +13,12 @@ namespace AMSS.Controllers
 {
     public class OrdersController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private IUnitOfWork unitOfWork;
+
+        public OrdersController()
+        {
+            this.unitOfWork = new UnitOfWork();
+        }
 
         [Authorize(Roles = "Delivery User")]
         public ActionResult Index()
@@ -24,9 +30,9 @@ namespace AMSS.Controllers
 
             var currentUserId = User.Identity.GetUserId();
 
-            var userOrders = db.Orders.Where(a => a.DeliveryUserId == currentUserId && a.Status != "Delivered").OrderByDescending(a => a.OrderDate);
+            var userOrders = unitOfWork.OrdersRepository.Get(filter: a => a.DeliveryUserId == currentUserId && a.Status != "Delivered").OrderByDescending(a => a.OrderDate);
 
-            var orders = db.Orders.Where(a => a.DeliveryUserId == null).OrderByDescending(a => a.OrderDate);
+            var orders = unitOfWork.OrdersRepository.Get(filter: a => a.DeliveryUserId == null).OrderByDescending(a => a.OrderDate);
 
             ViewBag.NoOrders = !userOrders.ToList().Any();
             ViewBag.UserOrders = userOrders.ToList();
@@ -44,10 +50,7 @@ namespace AMSS.Controllers
 
             var currentUserId = User.Identity.GetUserId();
 
-            var orders = from order in db.Orders
-                         where order.UserId == currentUserId
-                         orderby order.OrderDate descending
-                         select order;
+            var orders = unitOfWork.OrdersRepository.Get(filter: a => a.UserId == currentUserId).OrderByDescending(a => a.OrderDate);
 
             ViewBag.Orders = orders.ToList();
             ViewBag.NoOrders = !orders.ToList().Any();
@@ -64,8 +67,8 @@ namespace AMSS.Controllers
 
             Order order = new Order();
             var currentUserId = User.Identity.GetUserId();
-            var currentOrderList = db.OrderLists.Where(user => user.UserId == currentUserId).First();
-            order.OrderDetails = db.OrderDetails.Where(orderDetail => orderDetail.OrderListId == currentOrderList.OrderListId).ToList();
+            var currentOrderList = unitOfWork.OrdersListsRepository.Get(user => user.UserId == currentUserId).First();
+            order.OrderDetails = unitOfWork.OrdersDetailsRepository.Get(orderDetail => orderDetail.OrderListId == currentOrderList.OrderListId).ToList();
             order.UserId = currentUserId;
             order.Address = address;
             float payment = 0;
@@ -94,21 +97,22 @@ namespace AMSS.Controllers
                 {
                     if (order.OrderDetails.Count > 0)
                     {
-                        db.Orders.Add(order);
-                        db.SaveChanges();
+                        unitOfWork.OrdersRepository.Insert(order);
+                        unitOfWork.Save();
                         TempData["message"] = "The order was placed!";
 
                         var currentUserId = User.Identity.GetUserId();
-                        var orderList = db.OrderLists.Where(a => a.UserId == currentUserId).FirstOrDefault();
+                        var orderList = unitOfWork.OrdersListsRepository.Get(a => a.UserId == currentUserId).FirstOrDefault();
 
                         foreach (var orderDetail in orderList.OrderDetails.ToList())
                         {
                             orderDetail.OrderListId = null;
                             orderDetail.OrderId = order.OrderId;
-                            db.Entry(orderDetail).CurrentValues.SetValues(orderDetail);
+                            unitOfWork.OrdersDetailsRepository.Update(orderDetail);
+                            // db.Entry(orderDetail).CurrentValues.SetValues(orderDetail);
                         }
 
-                        db.SaveChanges();
+                        unitOfWork.Save();
 
                         return Redirect("/Orders/UserOrders");
                     }
@@ -129,11 +133,12 @@ namespace AMSS.Controllers
             }
         }
 
+        private ApplicationDbContext db = new ApplicationDbContext();
         public ActionResult Show(int id)
         {
             try
             {
-                var order = db.Orders.Find(id);
+                var order = unitOfWork.OrdersRepository.GetByID(id);
                 var orderDetails = db.OrderDetails.Where(a => a.OrderId == id).Include(a => a.Food);
                 var currentUserId = User.Identity.GetUserId();
                 if (order != null || order.UserId != currentUserId)
@@ -158,20 +163,22 @@ namespace AMSS.Controllers
         public ActionResult UpdateStatus(int id)
         {
             var currentUserId = User.Identity.GetUserId();
-            Order order = db.Orders.Find(id);
+            Order order = unitOfWork.OrdersRepository.GetByID(id);
 
             if (order.DeliveryUserId == null && order.Status == "In progress")
             {
                 order.Status = "Picked up";
                 order.DeliveryUserId = currentUserId;
-                db.SaveChanges();
+                unitOfWork.Save();
+                //db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
             if (order.DeliveryUserId == currentUserId && order.Status == "Picked up")
             {
                 order.Status = "Delivered";
-                db.SaveChanges();
+                unitOfWork.Save();
+                //db.SaveChanges();
                 return RedirectToAction("Index");
             }
 

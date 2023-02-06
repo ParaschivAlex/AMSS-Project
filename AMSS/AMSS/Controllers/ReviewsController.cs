@@ -1,4 +1,5 @@
 ﻿using AMSS.Models;
+using AMSS.Repository;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,12 @@ namespace AMSS.Controllers
 {
     public class ReviewsController : Controller
     {
+        private IUnitOfWork unitOfWork;
+
+        public ReviewsController()
+        {
+            this.unitOfWork = new UnitOfWork();
+        }
         private ApplicationDbContext db = new ApplicationDbContext();
 
         [Authorize(Roles = "Admin")]
@@ -30,7 +37,7 @@ namespace AMSS.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult Show(int id)
         {
-            Review review = db.Reviews.Find(id);
+            Review review = unitOfWork.ReviewRepository.GetByID(id);
             ViewBag.Review = review;
             return View();
         }
@@ -38,7 +45,7 @@ namespace AMSS.Controllers
         [Authorize(Roles = "Admin, User, Restaurant Manager, Delivery User")]
         public ActionResult Edit(int id)
         {
-            Review rev = db.Reviews.Find(id);
+            Review rev = unitOfWork.ReviewRepository.GetByID(id);
             if (rev.UserId == User.Identity.GetUserId() || User.IsInRole("Admin"))
             {
                 ViewBag.CurrentUser = User.Identity.GetUserId();
@@ -58,7 +65,7 @@ namespace AMSS.Controllers
         {
             try
             {
-                Review rev = db.Reviews.Find(id);
+                Review rev = unitOfWork.ReviewRepository.GetByID(id);
                 //System.Diagnostics.Debug.WriteLine("found review");
 
                 if (rev.UserId == User.Identity.GetUserId() || User.IsInRole("Admin"))
@@ -73,7 +80,7 @@ namespace AMSS.Controllers
                         rev.ReviewComment = requestReview.ReviewComment;
                         rev.ReviewGrade = requestReview.ReviewGrade;
                         rev.ReviewModifyDate = DateTime.Now;
-                        db.SaveChanges();
+                        unitOfWork.Save();
 
                         //System.Diagnostics.Debug.WriteLine("pass update");
                     }
@@ -109,8 +116,8 @@ namespace AMSS.Controllers
             rev.UserId = User.Identity.GetUserId();
             if (ModelState.IsValid)
             {
-                db.Reviews.Add(rev);
-                db.SaveChanges();
+                unitOfWork.ReviewRepository.Insert(rev);
+                unitOfWork.Save();
                 TempData["message"] = "The review has been added successfully!";
             }
             return Redirect("/Restaurants/Show/" + rev.RestaurantId);
@@ -121,12 +128,12 @@ namespace AMSS.Controllers
         public ActionResult Delete(int id)
         {
 
-            Review rev = db.Reviews.Find(id);
+            Review rev = unitOfWork.ReviewRepository.GetByID(id);
             if (rev.UserId == User.Identity.GetUserId() || User.IsInRole("Admin"))
             {
-                db.Reviews.Remove(rev);
+                unitOfWork.ReviewRepository.Delete(rev);
                 TempData["message"] = "The review has been deleted!";
-                db.SaveChanges();
+                unitOfWork.Save();
                 return Redirect("/Restaurants/Show/" + rev.RestaurantId);
             }
             else
