@@ -13,9 +13,11 @@ namespace AMSS.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         [Authorize(Roles = "User")]
-        public void IsSingleton(OrderList orderList)
+        public OrderList GetOrderList()
         {
             var currentUserId = User.Identity.GetUserId();
+
+            OrderList orderList = db.OrderLists.Where(user => user.UserId == currentUserId).FirstOrDefault();
 
             //SINGLETON
 
@@ -23,10 +25,15 @@ namespace AMSS.Controllers
             {
                 orderList = new OrderList
                 {
+                    OrderDetails = new List<OrderDetail>(),
                     UserId = currentUserId
                 };
+
+                db.OrderLists.Add(orderList);
                 db.SaveChanges();
             }
+
+            return orderList;
         }
 
         [HttpPost]
@@ -37,9 +44,7 @@ namespace AMSS.Controllers
 
             Food food = db.Foods.Where(a => a.FoodId == foodId).FirstOrDefault();
 
-            OrderList orderList = db.OrderLists.Where(user => user.UserId == currentUserId).FirstOrDefault();
-
-            IsSingleton(orderList);
+            OrderList orderList = GetOrderList();
 
             if (orderList.OrderDetails.Where(a => a.FoodId == food.FoodId).Count() != 0)
             {

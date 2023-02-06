@@ -14,6 +14,28 @@ namespace AMSS.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         [Authorize(Roles = "User")]
+        public OrderList GetOrderList()
+        {
+            var currentUserId = User.Identity.GetUserId();
+
+            OrderList orderList = db.OrderLists.Where(user => user.UserId == currentUserId).FirstOrDefault();
+
+            if (orderList == null)
+            {
+                orderList = new OrderList
+                {
+                    OrderDetails = new List<OrderDetail>(),
+                    UserId = currentUserId
+                };
+
+                db.OrderLists.Add(orderList);
+                db.SaveChanges();
+            }
+
+            return orderList;
+        }
+
+        [Authorize(Roles = "User")]
         public ActionResult Index()
         {
             if (TempData.ContainsKey("message"))
@@ -23,7 +45,7 @@ namespace AMSS.Controllers
 
             var currentUserId = User.Identity.GetUserId();
 
-            var orderList = db.OrderLists.Where(a => a.UserId == currentUserId).FirstOrDefault();
+            OrderList orderList = GetOrderList();
 
             var orderDetails = db.OrderDetails.Where(a => a.OrderListId == orderList.OrderListId).Include(orderDetail => orderDetail.Food);
 
