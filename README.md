@@ -32,7 +32,7 @@ Use Case Diagram:
 <hr>
 Class Diagram:
 [alex]
-(https://github.com/ParaschivAlex/AMSS-Project/blob/main/amss_class_diagram_paraschiv.PNG)
+https://github.com/ParaschivAlex/AMSS-Project/blob/main/amss_class_diagram_paraschiv.PNG
 <hr>
 
 <h3>Gherasim Rares</h3>
