@@ -17,7 +17,7 @@ Diagrama overview initiala, inainte de checkpoint:
 Contributie personala:
 
 ![calin](https://github.com/ParaschivAlex/AMSS-Project/blob/main/amss_state_hirhui.png)
-<hr><hr><hr>
+<hr>
 ![calin](LINK TO BE UPDATED)
 <hr>
 
@@ -25,8 +25,8 @@ Contributie personala:
 
 Contributie personala: Am creat proiectul si am dezvoltat partile pentru Food, Restaurant, Review si User in mod traditional, fara design pattern "Repository".
 
-![alex](https://github.com/ParaschivAlex/AMSS-Project/blob/main/amss_ucd_paraschiv.png)
-<hr><hr><hr>
+![alex](/blob/main/amss_ucd_paraschiv.png)
+<hr>
 ![alex](https://github.com/ParaschivAlex/AMSS-Project/blob/main/amss_cls_paraschiv.png)
 <hr>
 
@@ -35,6 +35,6 @@ Contributie personala: Am creat proiectul si am dezvoltat partile pentru Food, R
 Contributie personala:
 
 ![rares](LINK TO BE UPDATED)
-<hr><hr><hr>
+<hr>
 ![rares](LINK TO BE UPDATED)
 <hr>
