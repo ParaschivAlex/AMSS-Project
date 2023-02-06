@@ -11,7 +11,7 @@ namespace AMSS.Models
         [Key]
         public int OrderId { get; set; }
 
-        [Required(ErrorMessage = "Adresa la care doriti sa livram mancarea este obligatorie")]
+        [Required(ErrorMessage = "Address is requried to place an order.")]
         public string Address { get; set; }
 
         public float Payment { get; set; }
@@ -20,15 +20,12 @@ namespace AMSS.Models
 
         public string Status { get; set; }
 
-        public int RestaurantId { get; set; }
-
         public string UserId { get; set; }
 
         public string DeliveryUserId { get; set; }
 
 
         public virtual ApplicationUser User { get; set; }
-        public virtual Restaurant Restaurant { get; set; }
         public virtual ApplicationUser DeliveryUser { get; set; }
 
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }

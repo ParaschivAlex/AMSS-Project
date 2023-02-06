@@ -1,0 +1,110 @@
+﻿@model AMSS.Models.Order
+@{
+    int indexYourOrders = 1;
+    int indexNewOrders = 1;
+    ViewBag.Title = "Index";
+}
+
+@if (ViewBag.NoOrders)
+{
+    <div>You have no orders in progress!</div>
+}
+else
+{
+<h2>Your Orders:</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            Index
+        </th>
+        <th>
+            Address
+        </th>
+        <th>
+            Payment
+        </th>
+        <th>
+            Date
+        </th>
+        <th>
+            Status
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in ViewBag.UserOrders)
+    {
+        <tr>
+            <td>
+                @indexYourOrders
+            </td>
+            <td>
+                @item.Address
+            </td>
+            <td>
+                @item.Payment
+            </td>
+            <td>
+                @item.OrderDate
+            </td>
+            <td>
+                @item.Status
+            </td>
+            <td>
+                <a class="btn btn-success" href="/Orders/UpdateStatus/@item.OrderId" style="display: inline-block; margin-right: 1em;">Update status</a>
+            </td>
+        </tr>
+        indexYourOrders++;
+    }
+</table>
+}
+
+<h2>Pick Up New Orders:</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            Index
+        </th>
+        <th>
+            Address
+        </th>
+        <th>
+            Payment
+        </th>
+        <th>
+            Date
+        </th>
+        <th>
+            Status
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in ViewBag.Orders)
+    {
+        <tr>
+            <td>
+                @indexNewOrders
+            </td>
+            <td>
+                @item.Address
+            </td>
+            <td>
+                @item.Payment
+            </td>
+            <td>
+                @item.OrderDate
+            </td>
+            <td>
+                @item.Status
+            </td>
+            <td>
+                <a class="btn btn-primary" href="/Orders/UpdateStatus/@item.OrderId" style="display: inline-block; margin-right: 1em;">Pick up</a>
+            </td>
+        </tr>
+        indexNewOrders++;
+    }
+</table>
+

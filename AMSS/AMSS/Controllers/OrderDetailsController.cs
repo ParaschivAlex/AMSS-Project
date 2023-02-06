@@ -14,34 +14,21 @@ namespace AMSS.Controllers
 
         [HttpPost]
         [Authorize(Roles = "User")]
-        public ActionResult New(Food food)
+        public ActionResult New(int foodId)
         {
             var currentUserId = User.Identity.GetUserId();
+
+            Food food = db.Foods.Where(a => a.FoodId == foodId).FirstOrDefault();
 
             OrderList orderList = db.OrderLists.Where(user => user.UserId == currentUserId).FirstOrDefault();
 
             if (orderList == null)
             {
-                // Current user is starting to order from a new restaurant;
                 orderList = new OrderList
                 {
                     UserId = currentUserId
                 };
                 db.SaveChanges();
-            }
-
-            if (orderList.OrderDetails.Count > 0)
-            {
-                var foodInList = orderList.OrderDetails.First().Food;
-                if (food.RestaurantId != foodInList.RestaurantId)
-                {
-                    // Current user is shopping at another restaurant
-                    orderList = new OrderList
-                    {
-                        UserId = currentUserId
-                    };
-                    db.SaveChanges();
-                }
             }
 
             if (orderList.OrderDetails.Where(a => a.FoodId == food.FoodId).Count() != 0)
@@ -56,24 +43,40 @@ namespace AMSS.Controllers
                 {
                     FoodId = food.FoodId,
                     Price = food.FoodPrice,
-                    OrderListId = orderList.OrderListId
+                    OrderListId = orderList.OrderListId,
+                    Quantity = 1
                 };
 
                 db.OrderDetails.Add(newOrderDetail);
                 db.SaveChanges();
             }
 
-            return View();
+            TempData["message"] = "Product was added to your cart!";
+            return Redirect("/Restaurants/Show/" + food.RestaurantId);
         }
 
-        [HttpDelete]
         [Authorize(Roles = "User")]
         public ActionResult Delete(int id)
         {
+            var currentUserId = User.Identity.GetUserId();
+
             OrderDetail orderDetail = db.OrderDetails.Find(id);
-            db.OrderDetails.Remove(orderDetail);
-            db.SaveChanges();
-            return View();
+            OrderList orderList = db.OrderLists.Find(orderDetail.OrderListId);
+
+            if (orderList.UserId == currentUserId)
+            {
+                if (orderDetail.Quantity > 1)
+                {
+                    orderDetail.Quantity--;
+                }
+                else
+                {
+                    db.OrderDetails.Remove(orderDetail);
+                }
+                db.SaveChanges();
+            }
+
+            return Redirect("/OrderLists/Index");
         }
     }
 }

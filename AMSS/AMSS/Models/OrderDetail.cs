@@ -17,9 +17,12 @@ namespace AMSS.Models
 
         public int FoodId { get; set; }
 
-        public int OrderListId { get; set; }
+        public int? OrderListId { get; set; }
+
+        public int? OrderId { get; set; }
 
         public virtual Food Food { get; set; }
         public virtual OrderList OrderList { get; set; }
+        public virtual Order Order { get; set; }
     }
 }
