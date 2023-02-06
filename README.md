@@ -31,8 +31,7 @@ Use Case Diagram:
 ![alex](https://github.com/ParaschivAlex/AMSS-Project/blob/main/amss_ucd_paraschiv.png)
 <hr>
 Class Diagram:
-[alex]
-https://github.com/ParaschivAlex/AMSS-Project/blob/main/amss_class_diagram_paraschiv.PNG
+![alex](https://github.com/ParaschivAlex/AMSS-Project/blob/main/amss_class_paraschiv.png)
 <hr>
 
 <h3>Gherasim Rares</h3>
