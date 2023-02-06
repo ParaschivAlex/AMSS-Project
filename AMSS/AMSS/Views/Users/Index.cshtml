@@ -1,50 +1,22 @@
-﻿@model IEnumerable<AMSS.Models.ApplicationUser>
-
-@{
-    ViewBag.Title = "Index";
-}
-
-<div class="row">
-    <div class=" col-md-6">
-        <h3><strong>Lista Useri</strong></h3>
+﻿<div class="row">
+    <div class=" col-md-12">
+        <h3><strong>Users</strong></h3>
         @foreach (var user in ViewBag.UsersList)
         {
-    <div class="panel-body">
+            <div class="panel-heading">UserName: @user.UserName</div>
 
-        <i class="glyphicon glyphicon-envelope"></i> Email utilizator: <span class="label label-default">@user.Email</span>
+            <div class="panel-body">
 
+                <i class="glyphicon glyphicon-envelope"></i> User Email: <span class="label label-default">@user.Email</span>
 
-        @if (@user.PhoneNumber != null)
-        {
-            <br />
-            <i class="glyphicon glyphicon-phone"></i>@:Telefon utilizator:<span class="label label-default">@user.PhoneNumber</span>
-        }
-
-        <br />
-        @{
-            string userRoleId = user.Roles[0].RoleId;
-            string userRoleName = "";
-            foreach (var role in ViewBag.Roles)
-            {
-                if (role.Id == userRoleId)
-                {
-                    userRoleName = role.Name;
-                    break;
-                }
-            }
-            <i class="glyphicon glyphicon-phone"></i>@:Rol:<span class="label label-default"> @userRoleName</span>
-        }
-
-    </div>
+                <br /><br />
+            </div>
 
             <div class="panel-footer">
-                <td>
-                    <a class="btn btn-warning" href="/Users/Edit/@user.Id" style="display: inline-block; margin-right: 1em;">Edit</a>
-                </td>
-                <form method="post" action="/Users/Delete/@user.Id">
-                    @Html.HttpMethodOverride(HttpVerbs.Delete)
-                    <button class="btn btn-danger justify-content-center" type="submit">Delete</button>
-                </form>
+
+                <a class="btn btn-sm btn-success" href="/Users/Edit/@user.Id"> Edit</a>
+                <a class="btn btn-sm btn-success" href="/Users/Show/@user.Id"> View</a>
+
             </div>
 
             <br /><br />

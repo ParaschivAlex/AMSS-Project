@@ -32,6 +32,25 @@ namespace AMSS.Controllers
             return View();
         }
 
+        private ApplicationDbContext db = new ApplicationDbContext();
+        public ActionResult Show(string id)
+        {
+
+            ApplicationUser user = db.Users.Find(id);
+            ViewBag.utilizatorCurent = User.Identity.GetUserId();
+
+
+            string currentRole = user.Roles.FirstOrDefault().RoleId;
+
+            var userRoleName = (from role in db.Roles
+                                where role.Id == currentRole
+                                select role.Name).First();
+
+            ViewBag.roleName = userRoleName;
+
+            return View(user);
+        }
+
         public ActionResult Edit(string id)
         {
             ApplicationUser user = unitOfWork.UserRepository.GetByID(id);
