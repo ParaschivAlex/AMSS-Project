@@ -21,7 +21,7 @@ namespace AMSS.Controllers
         }
 
         // GET: Categories
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, User")]
         public ActionResult Index()
         {
             if (TempData.ContainsKey("message"))
@@ -39,6 +39,7 @@ namespace AMSS.Controllers
             }
 
             ViewBag.Restaurants = restaurants;
+            ViewBag.IsAdmin = User.IsInRole("Admin");
             return View();
         }
 

@@ -1,0 +1,59 @@
+﻿@model AMSS.Models.Restaurant
+
+@{
+    var message = TempData["message"];
+    ViewBag.Title = "Show";
+}
+
+<h2>@Html.DisplayFor(model => model.RestaurantName)</h2>
+
+<div>@message</div>
+
+<table class="table">
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Ingredients
+        </th>
+        <th>
+            Price
+        </th>
+        <th>
+            Photo
+        </th>
+        <th>
+            Modified
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in ViewBag.Foods)
+    {
+        <tr>
+            <td>
+                @item.FoodName
+            </td>
+            <td>
+                @item.FoodIngredients
+            </td>
+            <td>
+                @item.FoodPrice
+            </td>
+            <td>
+                @item.FoodPhoto
+            </td>
+            <td>
+                @item.FoodModifyDate
+            </td>
+            <td>
+                <form method="post" action="/OrderDetails/New/">
+                    <input type="hidden" name="foodId" value="@item.FoodId" />
+                    <button class="btn btn-success justify-content-center" type="submit">Add to cart</button>
+                </form>
+            </td>
+        </tr>
+    }
+</table>
+

@@ -34,6 +34,9 @@ namespace AMSS.Models
         public DbSet<Restaurant> Restaurants { get; set; }
         public DbSet<Food> Foods { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderList> OrderLists { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
 
         public static ApplicationDbContext Create()
         {

@@ -1,0 +1,43 @@
+﻿@model AMSS.Models.Order
+
+@{
+    ViewBag.Title = "Show";
+}
+
+<h2>Order details:</h2>
+<div>Address: @ViewBag.Order.Address</div>
+<div>Payment: @ViewBag.Order.Payment</div>
+<div>Status: @ViewBag.Order.Status</div>
+
+<h4>Food List:</h4>
+<table class="table">
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Quantity
+        </th>
+        <th>
+            Price
+        </th>
+    </tr>
+
+    @foreach (var item in ViewBag.OrderDetails)
+    {
+        <tr>
+            <td>
+                @item.Food.FoodName
+            </td>
+            <td>
+                @item.Quantity
+            </td>
+            <td>
+                @item.Food.FoodPrice
+            </td>
+        </tr>
+    }
+</table>
+
+<a class="btn btn-success" href="/Orders/UserOrders" style="display: inline-block; margin-right: 1em;">Go Back</a>
+
