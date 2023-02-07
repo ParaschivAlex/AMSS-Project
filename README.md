@@ -14,27 +14,27 @@ Diagrama overview initiala, inainte de checkpoint:
 
 <h3>Hirhui Calin</h3>
 
-State Diagram:
+<h5>State Diagram:</h5>
 ![calin](https://github.com/ParaschivAlex/AMSS-Project/blob/main/amss_state_hirhui.png)
 <hr>
-To be updated diagram:
+<h5>Class Diagram:</h5>
 <img src="https://github.com/ParaschivAlex/AMSS-Project/blob/main/amss_class_hirhui.png" width="1920" height="1080" />
 <hr>
 
 <h3>Paraschiv Alexandru-Andrei</h3>
 
-Use Case Diagram:
+<h5>Use Case Diagram:</h5>
 ![alex](https://github.com/ParaschivAlex/AMSS-Project/blob/main/amss_ucd_paraschiv.png)
 <hr>
-Class Diagram:
+<h5>Class Diagram:</h5>
 <img src="https://github.com/ParaschivAlex/AMSS-Project/blob/main/amss_class_paraschiv.png" width="1920" height="1080" />
 <hr>
 
 <h3>Gherasim Rares</h3>
 
-Use Case Diagram:
+<h5>Use Case Diagram:</h5>
 ![rares](https://github.com/ParaschivAlex/AMSS-Project/blob/main/amss-use-case-diagram_rares-1.png)
 <hr>
-Package Diagram:
+<h5>Package Diagram:</h5>
 <img src="https://github.com/ParaschivAlex/AMSS-Project/blob/main/package_diagram_rares_2.png" width="1920" height="1080" />
 <hr>
