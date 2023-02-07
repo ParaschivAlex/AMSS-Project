@@ -32,9 +32,9 @@ Class Diagram:
 
 <h3>Gherasim Rares</h3>
 
-To be updated diagram:
+Use Case Diagram:
 ![rares](https://github.com/ParaschivAlex/AMSS-Project/blob/main/amss-use-case-diagram_rares-1.png)
 <hr>
-To be updated diagram:
-![rares](LINK TO BE UPDATED)
+Package Diagram:
+<img src="https://github.com/ParaschivAlex/AMSS-Project/blob/main/package_diagram_rares_1.png" width="1920" height="1080" />
 <hr>
