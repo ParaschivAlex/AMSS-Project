@@ -18,7 +18,7 @@ State Diagram:
 ![calin](https://github.com/ParaschivAlex/AMSS-Project/blob/main/amss_state_hirhui.png)
 <hr>
 To be updated diagram:
-![calin](LINK TO BE UPDATED)
+<img src="https://github.com/ParaschivAlex/AMSS-Project/blob/main/amss_class_hirhui.png" width="1920" height="1080" />
 <hr>
 
 <h3>Paraschiv Alexandru-Andrei</h3>
@@ -27,7 +27,7 @@ Use Case Diagram:
 ![alex](https://github.com/ParaschivAlex/AMSS-Project/blob/main/amss_ucd_paraschiv.png)
 <hr>
 Class Diagram:
-![alex](https://github.com/ParaschivAlex/AMSS-Project/blob/main/amss_class_paraschiv.png)
+<img src="https://github.com/ParaschivAlex/AMSS-Project/blob/main/amss_class_paraschiv.png" width="1920" height="1080" />
 <hr>
 
 <h3>Gherasim Rares</h3>
