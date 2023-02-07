@@ -36,5 +36,5 @@ Use Case Diagram:
 ![rares](https://github.com/ParaschivAlex/AMSS-Project/blob/main/amss-use-case-diagram_rares-1.png)
 <hr>
 Package Diagram:
-<img src="https://github.com/ParaschivAlex/AMSS-Project/blob/main/package_diagram_rares_1.png" width="1920" height="1080" />
+<img src="https://github.com/ParaschivAlex/AMSS-Project/blob/main/package_diagram_rares_2.png" width="1920" height="1080" />
 <hr>
